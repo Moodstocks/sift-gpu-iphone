@@ -1,0 +1,6 @@
+build/
+GPU_SIFT.xcodeproj/*.pbxuser
+GPU_SIFT.xcodeproj/*.mode*
+GPU_SIFT.xcodeproj/*.perspectivev3
+GPU_SIFT.xcodeproj/*.xcworkspace/
+GPU_SIFT.xcodeproj/xcuserdata/

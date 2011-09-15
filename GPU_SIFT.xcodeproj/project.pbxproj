@@ -1,0 +1,352 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72715142269B500CC88CA /* UIKit.framework */; };
+		9CA72718142269B500CC88CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72717142269B500CC88CA /* Foundation.framework */; };
+		9CA7271A142269B500CC88CA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA72719142269B500CC88CA /* CoreGraphics.framework */; };
+		9CA7271C142269B500CC88CA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA7271B142269B500CC88CA /* QuartzCore.framework */; };
+		9CA7271E142269B500CC88CA /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA7271D142269B500CC88CA /* OpenGLES.framework */; };
+		9CA72727142269B500CC88CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72726142269B500CC88CA /* main.m */; };
+		9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */; };
+		9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA7275A14226AA900CC88CA /* KeyPoint.m */; };
+		9CA7275E14226AA900CC88CA /* SIFT.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CA7275C14226AA900CC88CA /* SIFT.m */; };
+		9CA7278014226B0300CC88CA /* 00.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7277F14226B0300CC88CA /* 00.jpg */; };
+		9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7278114226D2600CC88CA /* MainWindow.xib */; };
+		9CA7278314226E8D00CC88CA /* descriptor.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276014226AC100CC88CA /* descriptor.fsh */; };
+		9CA7278414226E8D00CC88CA /* dog.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276114226AC100CC88CA /* dog.fsh */; };
+		9CA7278514226E8D00CC88CA /* edgeSuppression.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276214226AC100CC88CA /* edgeSuppression.fsh */; };
+		9CA7278614226E8D00CC88CA /* grad.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276314226AC100CC88CA /* grad.fsh */; };
+		9CA7278714226E8D00CC88CA /* gradient.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276414226AC100CC88CA /* gradient.fsh */; };
+		9CA7278814226E8D00CC88CA /* mainOrientation.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276514226AC100CC88CA /* mainOrientation.fsh */; };
+		9CA7278914226E8D00CC88CA /* nms.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276614226AC100CC88CA /* nms.fsh */; };
+		9CA7278A14226E8D00CC88CA /* orientation.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276714226AC100CC88CA /* orientation.fsh */; };
+		9CA7278B14226E8D00CC88CA /* printer.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276814226AC100CC88CA /* printer.fsh */; };
+		9CA7278C14226E8D00CC88CA /* quickBlur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276914226AC100CC88CA /* quickBlur.fsh */; };
+		9CA7278D14226E8D00CC88CA /* smooth.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276A14226AC100CC88CA /* smooth.fsh */; };
+		9CA7278E14226E8D00CC88CA /* smoothDouble.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276B14226AC100CC88CA /* smoothDouble.fsh */; };
+		9CA7278F14226E8D00CC88CA /* vertex.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276C14226AC100CC88CA /* vertex.vsh */; };
+		9CA7279014226E8D00CC88CA /* vertex0.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276D14226AC100CC88CA /* vertex0.vsh */; };
+		9CA7279114226E8D00CC88CA /* vertex2.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 9CA7276E14226AC100CC88CA /* vertex2.vsh */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		9CA72711142269B500CC88CA /* GPU_SIFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GPU_SIFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CA72715142269B500CC88CA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9CA72717142269B500CC88CA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9CA72719142269B500CC88CA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9CA7271B142269B500CC88CA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9CA7271D142269B500CC88CA /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		9CA72721142269B500CC88CA /* GPU_SIFT-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GPU_SIFT-Info.plist"; sourceTree = "<group>"; };
+		9CA72725142269B500CC88CA /* GPU_SIFT-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GPU_SIFT-Prefix.pch"; sourceTree = "<group>"; };
+		9CA72726142269B500CC88CA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9CA72728142269B500CC88CA /* GPU_SIFTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GPU_SIFTAppDelegate.h; sourceTree = "<group>"; };
+		9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GPU_SIFTAppDelegate.m; sourceTree = "<group>"; };
+		9CA7275914226AA900CC88CA /* KeyPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyPoint.h; sourceTree = "<group>"; };
+		9CA7275A14226AA900CC88CA /* KeyPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyPoint.m; sourceTree = "<group>"; };
+		9CA7275B14226AA900CC88CA /* SIFT.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIFT.h; sourceTree = "<group>"; };
+		9CA7275C14226AA900CC88CA /* SIFT.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIFT.m; sourceTree = "<group>"; };
+		9CA7276014226AC100CC88CA /* descriptor.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = descriptor.fsh; path = Shaders/descriptor.fsh; sourceTree = "<group>"; };
+		9CA7276114226AC100CC88CA /* dog.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = dog.fsh; path = Shaders/dog.fsh; sourceTree = "<group>"; };
+		9CA7276214226AC100CC88CA /* edgeSuppression.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = edgeSuppression.fsh; path = Shaders/edgeSuppression.fsh; sourceTree = "<group>"; };
+		9CA7276314226AC100CC88CA /* grad.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = grad.fsh; path = Shaders/grad.fsh; sourceTree = "<group>"; };
+		9CA7276414226AC100CC88CA /* gradient.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = gradient.fsh; path = Shaders/gradient.fsh; sourceTree = "<group>"; };
+		9CA7276514226AC100CC88CA /* mainOrientation.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = mainOrientation.fsh; path = Shaders/mainOrientation.fsh; sourceTree = "<group>"; };
+		9CA7276614226AC100CC88CA /* nms.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = nms.fsh; path = Shaders/nms.fsh; sourceTree = "<group>"; };
+		9CA7276714226AC100CC88CA /* orientation.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = orientation.fsh; path = Shaders/orientation.fsh; sourceTree = "<group>"; };
+		9CA7276814226AC100CC88CA /* printer.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = printer.fsh; path = Shaders/printer.fsh; sourceTree = "<group>"; };
+		9CA7276914226AC100CC88CA /* quickBlur.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = quickBlur.fsh; path = Shaders/quickBlur.fsh; sourceTree = "<group>"; };
+		9CA7276A14226AC100CC88CA /* smooth.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = smooth.fsh; path = Shaders/smooth.fsh; sourceTree = "<group>"; };
+		9CA7276B14226AC100CC88CA /* smoothDouble.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = smoothDouble.fsh; path = Shaders/smoothDouble.fsh; sourceTree = "<group>"; };
+		9CA7276C14226AC100CC88CA /* vertex.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex.vsh; path = Shaders/vertex.vsh; sourceTree = "<group>"; };
+		9CA7276D14226AC100CC88CA /* vertex0.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex0.vsh; path = Shaders/vertex0.vsh; sourceTree = "<group>"; };
+		9CA7276E14226AC100CC88CA /* vertex2.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = vertex2.vsh; path = Shaders/vertex2.vsh; sourceTree = "<group>"; };
+		9CA7277F14226B0300CC88CA /* 00.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 00.jpg; sourceTree = "<group>"; };
+		9CA7278114226D2600CC88CA /* MainWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9CA7270E142269B500CC88CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CA72716142269B500CC88CA /* UIKit.framework in Frameworks */,
+				9CA72718142269B500CC88CA /* Foundation.framework in Frameworks */,
+				9CA7271A142269B500CC88CA /* CoreGraphics.framework in Frameworks */,
+				9CA7271C142269B500CC88CA /* QuartzCore.framework in Frameworks */,
+				9CA7271E142269B500CC88CA /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9CA72706142269B500CC88CA = {
+			isa = PBXGroup;
+			children = (
+				9CA7271F142269B500CC88CA /* GPU_SIFT */,
+				9CA72714142269B500CC88CA /* Frameworks */,
+				9CA72712142269B500CC88CA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9CA72712142269B500CC88CA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9CA72711142269B500CC88CA /* GPU_SIFT.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9CA72714142269B500CC88CA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9CA72715142269B500CC88CA /* UIKit.framework */,
+				9CA72717142269B500CC88CA /* Foundation.framework */,
+				9CA72719142269B500CC88CA /* CoreGraphics.framework */,
+				9CA7271B142269B500CC88CA /* QuartzCore.framework */,
+				9CA7271D142269B500CC88CA /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9CA7271F142269B500CC88CA /* GPU_SIFT */ = {
+			isa = PBXGroup;
+			children = (
+				9CA7277E14226AD400CC88CA /* Resources */,
+				9CA7275F14226AB000CC88CA /* Shaders */,
+				9CA7275914226AA900CC88CA /* KeyPoint.h */,
+				9CA7275A14226AA900CC88CA /* KeyPoint.m */,
+				9CA7275B14226AA900CC88CA /* SIFT.h */,
+				9CA7275C14226AA900CC88CA /* SIFT.m */,
+				9CA72728142269B500CC88CA /* GPU_SIFTAppDelegate.h */,
+				9CA72729142269B500CC88CA /* GPU_SIFTAppDelegate.m */,
+				9CA72720142269B500CC88CA /* Supporting Files */,
+			);
+			path = GPU_SIFT;
+			sourceTree = "<group>";
+		};
+		9CA72720142269B500CC88CA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9CA7278114226D2600CC88CA /* MainWindow.xib */,
+				9CA72721142269B500CC88CA /* GPU_SIFT-Info.plist */,
+				9CA72725142269B500CC88CA /* GPU_SIFT-Prefix.pch */,
+				9CA72726142269B500CC88CA /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9CA7275F14226AB000CC88CA /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				9CA7276014226AC100CC88CA /* descriptor.fsh */,
+				9CA7276114226AC100CC88CA /* dog.fsh */,
+				9CA7276214226AC100CC88CA /* edgeSuppression.fsh */,
+				9CA7276314226AC100CC88CA /* grad.fsh */,
+				9CA7276414226AC100CC88CA /* gradient.fsh */,
+				9CA7276514226AC100CC88CA /* mainOrientation.fsh */,
+				9CA7276614226AC100CC88CA /* nms.fsh */,
+				9CA7276714226AC100CC88CA /* orientation.fsh */,
+				9CA7276814226AC100CC88CA /* printer.fsh */,
+				9CA7276914226AC100CC88CA /* quickBlur.fsh */,
+				9CA7276A14226AC100CC88CA /* smooth.fsh */,
+				9CA7276B14226AC100CC88CA /* smoothDouble.fsh */,
+				9CA7276C14226AC100CC88CA /* vertex.vsh */,
+				9CA7276D14226AC100CC88CA /* vertex0.vsh */,
+				9CA7276E14226AC100CC88CA /* vertex2.vsh */,
+			);
+			name = Shaders;
+			sourceTree = "<group>";
+		};
+		9CA7277E14226AD400CC88CA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9CA7277F14226B0300CC88CA /* 00.jpg */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9CA72710142269B500CC88CA /* GPU_SIFT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CA72753142269B500CC88CA /* Build configuration list for PBXNativeTarget "GPU_SIFT" */;
+			buildPhases = (
+				9CA7270D142269B500CC88CA /* Sources */,
+				9CA7270E142269B500CC88CA /* Frameworks */,
+				9CA7270F142269B500CC88CA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GPU_SIFT;
+			productName = GPU_SIFT;
+			productReference = 9CA72711142269B500CC88CA /* GPU_SIFT.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9CA72708142269B500CC88CA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 9CA7270B142269B500CC88CA /* Build configuration list for PBXProject "GPU_SIFT" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9CA72706142269B500CC88CA;
+			productRefGroup = 9CA72712142269B500CC88CA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9CA72710142269B500CC88CA /* GPU_SIFT */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9CA7270F142269B500CC88CA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CA7278314226E8D00CC88CA /* descriptor.fsh in Resources */,
+				9CA7278414226E8D00CC88CA /* dog.fsh in Resources */,
+				9CA7278514226E8D00CC88CA /* edgeSuppression.fsh in Resources */,
+				9CA7278614226E8D00CC88CA /* grad.fsh in Resources */,
+				9CA7278714226E8D00CC88CA /* gradient.fsh in Resources */,
+				9CA7278814226E8D00CC88CA /* mainOrientation.fsh in Resources */,
+				9CA7278914226E8D00CC88CA /* nms.fsh in Resources */,
+				9CA7278A14226E8D00CC88CA /* orientation.fsh in Resources */,
+				9CA7278B14226E8D00CC88CA /* printer.fsh in Resources */,
+				9CA7278C14226E8D00CC88CA /* quickBlur.fsh in Resources */,
+				9CA7278D14226E8D00CC88CA /* smooth.fsh in Resources */,
+				9CA7278E14226E8D00CC88CA /* smoothDouble.fsh in Resources */,
+				9CA7278F14226E8D00CC88CA /* vertex.vsh in Resources */,
+				9CA7279014226E8D00CC88CA /* vertex0.vsh in Resources */,
+				9CA7279114226E8D00CC88CA /* vertex2.vsh in Resources */,
+				9CA7278014226B0300CC88CA /* 00.jpg in Resources */,
+				9CA7278214226D2600CC88CA /* MainWindow.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9CA7270D142269B500CC88CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CA72727142269B500CC88CA /* main.m in Sources */,
+				9CA7272A142269B500CC88CA /* GPU_SIFTAppDelegate.m in Sources */,
+				9CA7275D14226AA900CC88CA /* KeyPoint.m in Sources */,
+				9CA7275E14226AA900CC88CA /* SIFT.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		9CA72751142269B500CC88CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		9CA72752142269B500CC88CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		9CA72754142269B500CC88CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GPU_SIFT/GPU_SIFT-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				GCC_VERSION = 4.2;
+				INFOPLIST_FILE = "GPU_SIFT/GPU_SIFT-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9CA72755142269B500CC88CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "GPU_SIFT/GPU_SIFT-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				GCC_VERSION = 4.2;
+				INFOPLIST_FILE = "GPU_SIFT/GPU_SIFT-Info.plist";
+				OTHER_CFLAGS = "";
+				"OTHER_CFLAGS[arch=armv7]" = (
+					"-mfloat-abi=softfp",
+					"-mfpu=neon",
+				);
+				"OTHER_CPLUSPLUSFLAGS[arch=armv7]" = "$(OTHER_CFLAGS)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9CA7270B142269B500CC88CA /* Build configuration list for PBXProject "GPU_SIFT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CA72751142269B500CC88CA /* Debug */,
+				9CA72752142269B500CC88CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9CA72753142269B500CC88CA /* Build configuration list for PBXNativeTarget "GPU_SIFT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CA72754142269B500CC88CA /* Debug */,
+				9CA72755142269B500CC88CA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9CA72708142269B500CC88CA /* Project object */;
+}
