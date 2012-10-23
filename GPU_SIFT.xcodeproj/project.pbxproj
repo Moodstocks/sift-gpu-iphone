@@ -297,7 +297,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GPU_SIFT/GPU_SIFT-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GPU_SIFT/GPU_SIFT-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -312,7 +312,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GPU_SIFT/GPU_SIFT-Prefix.pch";
 				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
-				GCC_VERSION = 4.2;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "GPU_SIFT/GPU_SIFT-Info.plist";
 				OTHER_CFLAGS = "";
 				"OTHER_CFLAGS[arch=armv7]" = (
@@ -345,6 +345,7 @@
 				9CA72755142269B500CC88CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
