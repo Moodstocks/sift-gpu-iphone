@@ -50,7 +50,8 @@
 	GLfloat gaussCoord[8];
 }
 
--(void) initWithWidth:(int)picWidth Height:(int)picHeight Octaves:(int)oct;
--(NSMutableArray*) computeSiftOnCGImage:(CGImageRef)picture;
+- (instancetype _Nonnull)init;
+- (void)initWithWidth:(int)picWidth Height:(int)picHeight Octaves:(int)oct;
+- (NSMutableArray * _Nonnull)computeSiftOn:(CGImageRef _Nonnull)cgImage;
 
 @end
