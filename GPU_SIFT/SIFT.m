@@ -8,7 +8,7 @@
 	#include <arm_neon.h>
 #endif
 
-#include "keyPoint.h"
+#include "KeyPoint.h"
 
 @interface SIFT (EAGLViewSprite)
 
@@ -23,6 +23,27 @@
 	return [CAEAGLLayer class];
 }
 
+- (instancetype _Nonnull)init
+{
+    if (self = [super init]) {
+        // Get the layer
+        CAEAGLLayer *eaglLayer = (CAEAGLLayer*) self.layer;
+        
+        eaglLayer.opaque = YES;
+        eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        [NSNumber numberWithBool:FALSE], kEAGLDrawablePropertyRetainedBacking, kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat, nil];
+        
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        
+        if(!context || ![EAGLContext setCurrentContext:context]) {
+            return nil;
+        }
+        
+        [EAGLContext setCurrentContext:context];
+    }
+    
+    return self;
+}
 
 - (id)initWithCoder:(NSCoder*)coder
 {
@@ -37,14 +58,13 @@
 		context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		
 		if(!context || ![EAGLContext setCurrentContext:context]) {
-			[self release];
 			return nil;
 		}
 		
 		[EAGLContext setCurrentContext:context];
 	}
 
-	return self;
+    return self;
 }
 
 #ifdef _ARM_ARCH_7
@@ -56,15 +76,15 @@ void neon_convert (uint8_t * __restrict dest, uint8_t * __restrict src, int widt
 	uint8x8_t rfac = vdup_n_u8 (77);
 	uint8x8_t gfac = vdup_n_u8 (151);
 	uint8x8_t bfac = vdup_n_u8 (28);
-	src+=(height-1)*width*4;
+	src += (height - 1) * width * 4;
 	
 	// Convert per eight pixels
-	for (i=height-1; i>=0; --i)
+	for (i = height - 1; i >= 0; --i)
 	{
-		for (j=0; j<width/8; ++j) 
+		for (j = 0; j < width / 8; ++j)
 		{
-			uint16x8_t  temp;
-			uint8x8x4_t rgb  = vld4_u8 (src);
+			uint16x8_t temp;
+			uint8x8x4_t rgb = vld4_u8 (src);
 			uint8x8x4_t result;
 			
 			temp = vmull_u8 (rgb.val[0],      bfac);
@@ -80,29 +100,29 @@ void neon_convert (uint8_t * __restrict dest, uint8_t * __restrict src, int widt
 			src  += 8*4;
 			dest += 8*4;
 		}
-		src-=8*width;
+		src -= 8 * width;
 	}
 }
 #else
 void neon_convert (uint8_t * __restrict dest, uint8_t * __restrict src, int width, int height)
 {
-	int k=(height-1)*width*4;
-	int l=0;
-	for (int i=height-1; i>=0; --i)
+	int k = (height - 1) * width * 4;
+	int l = 0;
+	for (int i = height - 1; i >= 0; --i)
 	{
-		for (int j=0; j<width; ++j) 
+		for (int j = 0; j < width; ++j)
 		{
 			//uint8_t color = 0;
-			uint8_t color=(77*src[k]+151*src[k+1]+28*src[k+2])/256;
-			dest[l]=color;
-			dest[l+1]=color;
-			dest[l+2]=color;
-			dest[l+3]=color;
+			uint8_t color = (77 * src[k] + 151 * src[k + 1] + 28 * src[k + 2]) / 256;
+			dest[l] = color;
+			dest[l + 1] = color;
+			dest[l + 2] = color;
+			dest[l + 3] = color;
 			
 			k+=4;
 			l+=4;
 		}
-		k-=8*width;
+		k -= 8 * width;
 	}
 }
 #endif
@@ -111,9 +131,9 @@ void neon_convert (uint8_t * __restrict dest, uint8_t * __restrict src, int widt
 //descriptor normalization and writing to structure
 void reorganize (uint8_t * reorgOut, uint8_t * desOut, int nb, int sqSize)
 {
-	for (int i=0; i<nb; i++) {
-		int firstIndex = 16*(i%sqSize+(i/sqSize)*4*sqSize);
-		for (int j=0; j<4; j++) {
+	for (int i = 0; i < nb; i++) {
+		int firstIndex = 16 * (i % sqSize + (i / sqSize) * 4 * sqSize);
+		for (int j = 0; j < 4; j++) {
 			reorgOut[128*i+32*j+0] = desOut[firstIndex+j*16*sqSize+0]/16;
 			reorgOut[128*i+32*j+1] = desOut[firstIndex+j*16*sqSize+0];
 			reorgOut[128*i+32*j+2] = desOut[firstIndex+j*16*sqSize+1]/16;
@@ -153,29 +173,29 @@ void reorganize (uint8_t * reorgOut, uint8_t * desOut, int nb, int sqSize)
 //normalization as described in SIFT paper: normalize, clamp to [0 , 0.2], normalize again, quantize on [0, 0.5]
 void normalize(NSMutableArray * tab, uint8_t * r, int nb)
 {
-	for (int i=0; i<nb; i++) {
+	for (int i = 0; i < nb; i++) {
 		//norm
 		float s = 0.0;
-		for (int j=0; j<128; j++) {
-			s+=(float)(r[128*i+j]*r[128*i+j]);
+		for (int j = 0; j < 128; j++) {
+			s += (float)(r[128 * i + j] * r[128 * i + j]);
 		}
-		s=sqrt(s);
+		s = sqrt(s);
 		//clamp
 		float * clamp = (float *) calloc(128, sizeof(float));
-		for (int j=0; j<128; j++) {
+		for (int j = 0; j < 128; j++) {
 			float v = (float)r[128*i+j]/s;
 			clamp[j] = v>0.2 ? 0.2 : v;
 		}
 		//norm
 		s = 0.0;
-		for (int j=0; j<128; j++) {
-			s+=clamp[j]*clamp[j];
+		for (int j = 0; j < 128; j++) {
+			s += clamp[j] * clamp[j];
 		}
-		s=sqrt(s)/255.0;
+		s = sqrt(s)/255.0;
 		//output
 		uint8_t * values = (uint8_t *) calloc(128, sizeof(uint8_t));
-		for (int j=0; j<128; j++) {
-			values[j]=(int)(2.0*clamp[j]/s);
+		for (int j = 0; j < 128; j++) {
+			values[j] = (int)(2.0*clamp[j]/s);
 		}
 		[[tab objectAtIndex:i] setDesc:values];
 	}
@@ -208,7 +228,8 @@ GLuint BuildShader(NSString* filename, GLenum shaderType)
 {
 	NSString* ext = shaderType==GL_VERTEX_SHADER ? @"vsh" : @"fsh";
 	
-	const char* source = filetobuf([[[NSBundle  mainBundle] pathForResource:filename ofType:ext inDirectory:nil] cStringUsingEncoding:NSUTF8StringEncoding]);
+    const char *file = [[[NSBundle mainBundle] pathForResource:filename ofType:ext inDirectory:nil] cStringUsingEncoding:NSUTF8StringEncoding];
+	const char* source = filetobuf(file);
     GLuint shaderHandle = glCreateShader(shaderType);
     glShaderSource(shaderHandle, 1, &source, 0);
     glCompileShader(shaderHandle);
@@ -248,15 +269,29 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 - (void)initWithWidth:(int)picWidth Height:(int)picHeight Octaves:(int)oct
 {
 	
-	width=picWidth;
-	height=picHeight;
+	width = picWidth;
+	height = picHeight;
 	NB_OCT = oct;
 		
 	// Full screen writing coordinates
-	writingPosition[0] = -1.0;  writingPosition[1] = -1.0;  writingPosition[2] = 1.0;  writingPosition[3] = -1.0;  writingPosition[4] = -1.0;  writingPosition[5] = 1.0;  writingPosition[6] = 1.0;  writingPosition[7] = 1.0;  
+	writingPosition[0] = -1.0;
+    writingPosition[1] = -1.0;
+    writingPosition[2] = 1.0;
+    writingPosition[3] = -1.0;
+    writingPosition[4] = -1.0;
+    writingPosition[5] = 1.0;
+    writingPosition[6] = 1.0;
+    writingPosition[7] = 1.0;
 	
 	// Fulle screen reading coordinates
-	readingPosition[0] = 0.0;  readingPosition[1] = 0.0;  readingPosition[2] = 1.0;  readingPosition[3] = 0.0;  readingPosition[4] = 0.0;  readingPosition[5] = 1.0;  readingPosition[6] = 1.0;  readingPosition[7] = 1.0;  
+	readingPosition[0] = 0.0;
+    readingPosition[1] = 0.0;
+    readingPosition[2] = 1.0;
+    readingPosition[3] = 0.0;
+    readingPosition[4] = 0.0;
+    readingPosition[5] = 1.0;
+    readingPosition[6] = 1.0;
+    readingPosition[7] = 1.0;
 
 	
 	// kernel values
@@ -265,22 +300,22 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	const float sigmaUp[4] = {sigmas[3], sigmas[4], sigmas[5], sigmas[6]};
 	sigma[0] = sigmas[1]; sigma[1] = sigmas[2]; sigma[2] = sigmas[3]; sigma[3] = sigmas[4]; 
 	
-	for (int i=0; i<15; i++) {
-		for (int j=0; j<4; j++) {
-			coeffDown0[4*i+j]=exp(-(float)(i)*(float)(i)/(2.0*sigmaDown[j]*sigmaDown[j]))/sqrt(2.0*3.14159*sigmaDown[j]*sigmaDown[j]);
-			coeffDown1[4*i+j]= i==0 ? 1.0 : exp(-(float)(i)*(float)(i)/(2.0*sigmaDown[j]*sigmaDown[j]))/sqrt(2.0*3.14159*sigmaDown[j]*sigmaDown[j]);			
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 4; j++) {
+			coeffDown0[4*i+j] = exp(-(float)(i)*(float)(i)/(2.0*sigmaDown[j]*sigmaDown[j]))/sqrt(2.0*3.14159*sigmaDown[j]*sigmaDown[j]);
+			coeffDown1[4*i+j] = i==0 ? 1.0 : exp(-(float)(i)*(float)(i)/(2.0*sigmaDown[j]*sigmaDown[j]))/sqrt(2.0*3.14159*sigmaDown[j]*sigmaDown[j]);
 		}
 	}
-	for (int i=0; i<15; i++) {
-		for (int j=0; j<4; j++) {
-			coeffUp0[4*i+j]=exp(-(float)(i)*(float)(i)/(2.0*sigmaUp[j]*sigmaUp[j]))/sqrt(2.0*3.14159*sigmaUp[j]*sigmaUp[j]);
-			coeffUp1[4*i+j]= i==0 ? 1.0 : exp(-(float)(i)*(float)(i)/(2.0*sigmaUp[j]*sigmaUp[j]))/sqrt(2.0*3.14159*sigmaUp[j]*sigmaUp[j]);
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 4; j++) {
+			coeffUp0[4*i+j] = exp(-(float)(i)*(float)(i)/(2.0*sigmaUp[j]*sigmaUp[j]))/sqrt(2.0*3.14159*sigmaUp[j]*sigmaUp[j]);
+			coeffUp1[4*i+j] = i==0 ? 1.0 : exp(-(float)(i)*(float)(i)/(2.0*sigmaUp[j]*sigmaUp[j]))/sqrt(2.0*3.14159*sigmaUp[j]*sigmaUp[j]);
 		}
 	}
 
-	float sigmaDoG=1.8;
-	for (int i=0; i<8; i++) {
-		coeffDoG[i]=exp(-(float)(i)*(float)(i)/(2.0*sigmaDoG*sigmaDoG))/sqrt(2.0*3.14159*sigmaDoG*sigmaDoG);
+	float sigmaDoG = 1.8;
+	for (int i = 0; i < 8; i++) {
+		coeffDoG[i] = exp(-(float)(i)*(float)(i)/(2.0*sigmaDoG*sigmaDoG))/sqrt(2.0*3.14159*sigmaDoG*sigmaDoG);
 	}
 
 	
@@ -292,9 +327,9 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	
-	uint8_t* gaussData=(uint8_t*) calloc(16*16, sizeof(uint8_t));
-	for (int i=-8; i<8; i++) {
-		for (int j=-8; j<8; j++) {
+	uint8_t* gaussData = (uint8_t*) calloc(16*16, sizeof(uint8_t));
+	for (int i =- 8; i < 8; i++) {
+		for (int j =- 8; j < 8; j++) {
 			gaussData[16*(i+8)+j+8] = (uint8_t)(255.0*exp(-(float)((i+0.5)*(i+0.5) + (j+0.5)*(j+0.5))/(2.0*2.25)));
 		}
 	}
@@ -309,8 +344,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	uint8_t* gaussData2=(uint8_t*) calloc(32*32, sizeof(uint8_t));
-	for (int i=-16; i<16; i++) {
-		for (int j=-16; j<16; j++) {
+	for (int i =- 16; i < 16; i++) {
+		for (int j =- 16; j < 16; j++) {
 			gaussData2[32*(i+16)+j+16] = (uint8_t)(255.0*exp(-(float)((i+0.5)*(i+0.5) + (j+0.5)*(j+0.5))/(2.0*64.0)));
 		}
 	}
@@ -319,7 +354,14 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	
 	// Special texture coordinates for this gaussian:
 	
-	gaussCoord[0] = 5.0/32.0;  gaussCoord[1] = 5.0/32.0;  gaussCoord[2] = 27.0/32.0;  gaussCoord[3] = 5.0/32.0;  gaussCoord[4] = 5.0/32.0;  gaussCoord[5] = 27.0/32.0;  gaussCoord[6] = 27.0/32.0;  gaussCoord[7] = 27.0/32.0;  
+	gaussCoord[0] = 5.0/32.0;
+    gaussCoord[1] = 5.0/32.0;
+    gaussCoord[2] = 27.0/32.0;
+    gaussCoord[3] = 5.0/32.0;
+    gaussCoord[4] = 5.0/32.0;
+    gaussCoord[5] = 27.0/32.0;
+    gaussCoord[6] = 27.0/32.0;
+    gaussCoord[7] = 27.0/32.0;
 		
 	
 	
@@ -330,10 +372,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//printer init
 	printer = BuildProgram(@"vertex",@"printer");
 	glUseProgram(printer);
-	printerWritingPosition=glGetAttribLocation(printer, "writingPosition");
+	printerWritingPosition = glGetAttribLocation(printer, "writingPosition");
 	glVertexAttribPointer(printerWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(printerWritingPosition);
-	printerReadingPosition=glGetAttribLocation(printer, "readingPosition");
+	printerReadingPosition = glGetAttribLocation(printer, "readingPosition");
 	glVertexAttribPointer(printerReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(printerReadingPosition);
 	printerPic0 = glGetUniformLocation(printer, "pic");
@@ -342,10 +384,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//gradient init
 	grad = BuildProgram(@"vertex",@"gradient");
 	glUseProgram(grad);
-	gradWritingPosition=glGetAttribLocation(grad, "writingPosition");
+	gradWritingPosition = glGetAttribLocation(grad, "writingPosition");
 	glVertexAttribPointer(gradWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(gradWritingPosition);
-	gradReadingPosition=glGetAttribLocation(grad, "readingPosition");
+	gradReadingPosition = glGetAttribLocation(grad, "readingPosition");
 	glVertexAttribPointer(gradReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(gradReadingPosition);
 	gradPic0 = glGetUniformLocation(grad, "pic0");
@@ -357,10 +399,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//smoothDouble init, computes high precision smoothing in 2 pass
 	smoothDouble = BuildProgram(@"vertex", @"smoothDouble");
 	glUseProgram(smoothDouble);
-	smoothDoubleWritingPosition=glGetAttribLocation(smoothDouble, "writingPosition");
+	smoothDoubleWritingPosition = glGetAttribLocation(smoothDouble, "writingPosition");
 	glVertexAttribPointer(smoothDoubleWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(smoothDoubleWritingPosition);
-	smoothDoubleReadingPosition=glGetAttribLocation(smoothDouble, "readingPosition");
+	smoothDoubleReadingPosition = glGetAttribLocation(smoothDouble, "readingPosition");
 	glVertexAttribPointer(smoothDoubleReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(smoothDoubleReadingPosition);
 	smoothDoubleGaussianCoeff = glGetUniformLocation(smoothDouble, "gaussianCoeff");
@@ -371,10 +413,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//smooth init, more approximate version used to smooth DoG results
 	smooth = BuildProgram(@"vertex", @"smooth");
 	glUseProgram(smooth);
-	smoothWritingPosition=glGetAttribLocation(smooth, "writingPosition");
+	smoothWritingPosition = glGetAttribLocation(smooth, "writingPosition");
 	glVertexAttribPointer(smoothWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(smoothWritingPosition);
-	smoothReadingPosition=glGetAttribLocation(smooth, "readingPosition");
+	smoothReadingPosition = glGetAttribLocation(smooth, "readingPosition");
 	glVertexAttribPointer(smoothReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(smoothReadingPosition);
 	smoothGaussianCoeff = glGetUniformLocation(smooth, "gaussianCoeff");
@@ -384,10 +426,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//dog init
 	dog=BuildProgram(@"vertex", @"dog");
 	glUseProgram(dog);
-	dogWritingPosition=glGetAttribLocation(dog, "writingPosition");
+	dogWritingPosition = glGetAttribLocation(dog, "writingPosition");
 	glVertexAttribPointer(dogWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(dogWritingPosition);
-	dogReadingPosition=glGetAttribLocation(dog, "readingPosition");
+	dogReadingPosition = glGetAttribLocation(dog, "readingPosition");
 	glVertexAttribPointer(dogReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(dogReadingPosition);
 	dogPic0 = glGetUniformLocation(dog, "pic");
@@ -396,10 +438,10 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	//NMS init
 	nms=BuildProgram(@"vertex", @"nms");
 	glUseProgram(nms);
-	nmsWritingPosition=glGetAttribLocation(nms, "writingPosition");
+	nmsWritingPosition = glGetAttribLocation(nms, "writingPosition");
 	glVertexAttribPointer(nmsWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(nmsWritingPosition);
-	nmsReadingPosition=glGetAttribLocation(nms, "readingPosition");
+	nmsReadingPosition = glGetAttribLocation(nms, "readingPosition");
 	glVertexAttribPointer(nmsReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(nmsReadingPosition);
 	nmsWidth = glGetUniformLocation(nms, "width");
@@ -409,9 +451,9 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	
 
 	//Edge Response Suppression init
-	edgeSuppression=BuildProgram(@"vertex0", @"edgeSuppression");
+	edgeSuppression = BuildProgram(@"vertex0", @"edgeSuppression");
 	glUseProgram(edgeSuppression);
-	edgeSuppressionWritingPosition=glGetAttribLocation(edgeSuppression, "writingPosition");
+	edgeSuppressionWritingPosition = glGetAttribLocation(edgeSuppression, "writingPosition");
 	glEnableVertexAttribArray(edgeSuppressionWritingPosition);
 	edgeSuppressionPic0 = glGetUniformLocation(edgeSuppression, "pic0");
 	edgeSuppressionPic1 = glGetUniformLocation(edgeSuppression, "pic1");
@@ -422,45 +464,45 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	
 	
 	//orientation init
-	orientation=BuildProgram(@"vertex2", @"orientation");
+	orientation = BuildProgram(@"vertex2", @"orientation");
 	glUseProgram(orientation);
-	orientationWritingPosition=glGetAttribLocation(orientation, "writingPosition");
+	orientationWritingPosition = glGetAttribLocation(orientation, "writingPosition");
 	glEnableVertexAttribArray(orientationWritingPosition);
-	orientationReadingPosition0=glGetAttribLocation(orientation, "readingPositionGrad");
+	orientationReadingPosition0 = glGetAttribLocation(orientation, "readingPositionGrad");
 	glEnableVertexAttribArray(orientationReadingPosition0);
-	orientationReadingPosition1=glGetAttribLocation(orientation, "readingPositionGauss");
+	orientationReadingPosition1 = glGetAttribLocation(orientation, "readingPositionGauss");
 	glVertexAttribPointer(orientationReadingPosition1, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(orientationReadingPosition1);
-	orientationPicGradx=glGetUniformLocation(orientation, "gradx");
-	orientationPicGrady=glGetUniformLocation(orientation, "grady");
-	orientationPicGauss=glGetUniformLocation(orientation, "gauss");
-	orientationScale=glGetUniformLocation(orientation, "scale");
-	orientationTheta=glGetUniformLocation(orientation, "theta");
+	orientationPicGradx = glGetUniformLocation(orientation, "gradx");
+	orientationPicGrady = glGetUniformLocation(orientation, "grady");
+	orientationPicGauss = glGetUniformLocation(orientation, "gauss");
+	orientationScale = glGetUniformLocation(orientation, "scale");
+	orientationTheta = glGetUniformLocation(orientation, "theta");
 	
 	
 	//main orientation init
-	mainOrientation=BuildProgram(@"vertex", @"mainOrientation");
+	mainOrientation = BuildProgram(@"vertex", @"mainOrientation");
 	glUseProgram(mainOrientation);
-	mainOrientationWritingPosition=glGetAttribLocation(mainOrientation, "writingPosition");
+	mainOrientationWritingPosition = glGetAttribLocation(mainOrientation, "writingPosition");
 	glVertexAttribPointer(mainOrientationWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(mainOrientationWritingPosition);
-	mainOrientationReadingPosition=glGetAttribLocation(mainOrientation, "readingPosition");
+	mainOrientationReadingPosition = glGetAttribLocation(mainOrientation, "readingPosition");
 	glVertexAttribPointer(mainOrientationReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(mainOrientationReadingPosition);
-	mainOrientationSize=glGetUniformLocation(mainOrientation, "sqSize");
-	mainOrientationPic0=glGetUniformLocation(mainOrientation, "pic0");
+	mainOrientationSize = glGetUniformLocation(mainOrientation, "sqSize");
+	mainOrientationPic0 = glGetUniformLocation(mainOrientation, "pic0");
 	
 	//descriptor init
-	descriptor=BuildProgram(@"vertex", @"descriptor");
+	descriptor = BuildProgram(@"vertex", @"descriptor");
 	glUseProgram(descriptor);
-	descriptorWritingPosition=glGetAttribLocation(descriptor, "writingPosition");
+	descriptorWritingPosition = glGetAttribLocation(descriptor, "writingPosition");
 	glVertexAttribPointer(descriptorWritingPosition, 2, GL_SHORT, GL_FALSE, 0, writingPosition);
 	glEnableVertexAttribArray(descriptorWritingPosition);
-	descriptorReadingPosition=glGetAttribLocation(descriptor, "readingPosition");
+	descriptorReadingPosition = glGetAttribLocation(descriptor, "readingPosition");
 	glVertexAttribPointer(descriptorReadingPosition, 2, GL_SHORT, GL_FALSE, 0, readingPosition);
 	glEnableVertexAttribArray(descriptorReadingPosition);
-	descriptorSize=glGetUniformLocation(descriptor, "sqSize");
-	descriptorPic0=glGetUniformLocation(descriptor, "pic0");
+	descriptorSize = glGetUniformLocation(descriptor, "sqSize");
+	descriptorPic0 = glGetUniformLocation(descriptor, "pic0");
 
 	// ---------------------- BUFFERS AND TEXTURES INITIALIZATION --------------------
 	
@@ -661,7 +703,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 
 
 
--(NSMutableArray*) computeSiftOnCGImage:(CGImageRef)picture
+- (NSMutableArray * _Nonnull)computeSiftOn:(CGImageRef _Nonnull)cgImage
 {
 		
 	//for debugging
@@ -675,7 +717,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	grayData = (uint8_t *) calloc(width * height * 4, sizeof(uint8_t));
 	
 	//Loading and converting image
-	CGDataProviderRef dataRef = CGImageGetDataProvider(picture);
+	CGDataProviderRef dataRef = CGImageGetDataProvider(cgImage);
 	CFDataRef data = CGDataProviderCopyData(dataRef);
 	originalData = (GLubyte *) CFDataGetBytePtr(data);
 	neon_convert(grayData, originalData, width, height);
@@ -688,8 +730,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
     
     double tdetect0 = [[NSDate date] timeIntervalSince1970];
     
-	int w=width;
-	int h=height;
+	int w = width;
+	int h = height;
 	for (int i=0; i<NB_OCT; i++) {
 		
 		glViewport(0, 0, w, h);
@@ -929,8 +971,8 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	// we must explore the image and find the coordinates and scales of keypoints,
 	// then store them in an array 
 
-	w=width;
-	h=height;
+	w = width;
+	h = height;
 	NSMutableArray *tab = [NSMutableArray arrayWithCapacity:0];
 	for (int i=0; i<NB_OCT; i++) {
 		for (int j=0; j<h; j++) {
@@ -952,7 +994,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	}
 	//sqSize = size of the square we will use to display the tiled regions of interest
 	int sqSize=(int)ceil(sqrt((float)[tab count]));
-	int nb=[tab count];
+	int nb = (int)[tab count];
 	
 
 	uint8_t * edgeOut = (uint8_t *) calloc(sqSize * sqSize *4, sizeof(uint8_t));
@@ -1008,9 +1050,9 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 		}
 	}
 	[tab removeObjectsAtIndexes:discard];
-	NSLog(@"Discarding %u keypoints",[discard count]);
+    NSLog(@"Discarding %lu keypoints",(unsigned long)[discard count]);
 	sqSize=(int)ceil(sqrt((float)[tab count]));
-	nb=[tab count];
+	nb=(int)[tab count];
 	
     double tdetect = [[NSDate date] timeIntervalSince1970]-tdetect0;
     
@@ -1103,7 +1145,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 		}
 	}
 	sqSize=(int)ceil(sqrt((float)[tab count]));
-	nb=[tab count];
+	nb=(int)[tab count];
 	
 	double tori = [[NSDate date] timeIntervalSince1970] - tori0;
 	
@@ -1203,7 +1245,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	}
 	[desString writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/result.des"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 	[frameString writeToFile:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents/result.frame"] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-	/* */
+	// */
 	
 	//Gives the number of keypoints per scale
 	for (int i=0; i<nb; i++) {
@@ -1222,18 +1264,18 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 	NSTimeInterval total = [[NSDate date] timeIntervalSince1970]-tinit;
 
 	NSString *result = [NSString stringWithFormat:@"Done in %1.3f s \nDetection: %1.3f s\nOrientation: %1.3f s\nDescription: %1.3f s\n",total, tdetect, tori, tdesc];
-	[[[[UIAlertView alloc] initWithTitle:@"Results"
+    
+    NSLog(@"%@", result);
+    /*/
+	[[[UIAlertView alloc] initWithTitle:@"Results"
                                  message:result
                                 delegate:nil
                        cancelButtonTitle:@"OK"
-                       otherButtonTitles:nil] autorelease] show];
+                       otherButtonTitles:nil] show];
+    //*/
 	
 	return tab;
-	
 }
-
-
-
 
 
 // Release resources when they are no longer needed.
@@ -1243,12 +1285,7 @@ GLuint BuildProgram(NSString* vertexShaderFilename, NSString* fragmentShaderFile
 		[EAGLContext setCurrentContext:nil];
 	}
 	
-	[context release];
 	context = nil;
-	
-	[super dealloc];
 }
-
-
 
 @end

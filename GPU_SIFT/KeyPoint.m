@@ -1,84 +1,93 @@
 #include "KeyPoint.h"
 
-
 @implementation KeyPoint
 
-- (int) x
+- (int)x
 {
 	return x;
 }
 
-- (int) y
+- (int)y
 {
 	return y;
 }
 
-- (int) level
+- (int)level
 {
 	return level;
 }
 
-- (int) t
+- (int)t
 {
 	return t;
 }
 
-- (uint8_t *) d
+- (uint8_t *)d
 {
 	return d;
 }
 
-- (int) getX
+- (int)getX
 {
 	return x;
 }
 
-- (int) getY
+- (int)getY
 {
 	return y;
 }
 
-- (int) getLevel
+- (int)getLevel
 {
 	return level;
 }
 
-- (int) getT
+- (int)getT
 {
 	return t;
 }
 
-- (uint8_t *) getD
+- (uint8_t *)getD
 {
 	return d;
 }
 
-- (float) getS
+- (float)getS
 {
 	return s;
 }
 
-- (void) initParamsX:(int)u Y:(int)v Level:(int)l
+- (void)initParamsX:(int)u Y:(int)v Level:(int)l
 {
-	x=u;
-	y=v;
-	level=l;
-	s=1.6*pow(sqrt(sqrt(2)),(float)level);
+	x = u;
+	y = v;
+	level = l;
+	s = 1.6*pow(sqrt(sqrt(2)),(float)level);
 }
 
-- (void) setTheta:(int)th
+- (void)setTheta:(int)th
 {
-	t=th;
+	t = th;
 }
 
-- (void) setDesc:(uint8_t *)desc
+- (void)setDesc:(uint8_t *)desc
 {
 	d = desc;
 }
 
-- (void) setS:(float)scale
+- (void)setS:(float)scale
 {
-	s=scale;
+	s = scale;
+}
+
+- (CGPoint)cgPoint
+{
+    return CGPointMake(x, y);
+}
+
+- (NSString *)description
+{
+    return NSStringFromCGPoint([self cgPoint]);
 }
 
 @end
